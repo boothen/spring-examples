@@ -1,0 +1,36 @@
+pids/
+target/
+*/target/
+*/*.iml
+*.iml
+*.log
+.tmp/
+.cache/
+.gradle
+*/.gradle
+build/
+out/
+logs/
+#Idea intelliJ files - too fiddly and personalised -- easier to regenerate from the pom.xml than to commit them
+.idea
+# Editor temp files
+*.swp
+*.un~
+# OS generated files #
+######################
+*/*/*/*/.DS_Store
+*/*/*/.DS_Store
+*/*/.DS_Store
+*/.DS_Store
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+.sass-cache/
+*/node_modules/.bin
+.classpath
+.project
+*.prefs
+org.eclipse.wst.common.project.facet.core.xml
+pids

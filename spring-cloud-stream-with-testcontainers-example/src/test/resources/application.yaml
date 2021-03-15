@@ -1,0 +1,6 @@
+spring:
+  cloud:
+    stream:
+      bindings:
+        subscription-channel:
+          destination: message-channel
