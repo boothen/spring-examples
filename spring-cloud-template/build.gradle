@@ -1,0 +1,42 @@
+plugins {
+    id 'java'
+    id 'org.springframework.boot' version '2.3.8.RELEASE'
+    id 'io.spring.dependency-management' version '1.0.11.RELEASE'
+}
+
+group 'uk.co.boothen'
+version '1.0-SNAPSHOT'
+
+repositories {
+    mavenLocal()
+    mavenCentral()
+}
+
+dependencyManagement {
+    imports {
+        mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
+    }
+}
+
+dependencies {
+    implementation group: 'org.springframework.boot', name: 'spring-boot-starter-aop'
+    implementation group: 'org.springframework.boot', name: 'spring-boot-starter-actuator'
+    implementation group: 'org.springframework.boot', name: 'spring-boot-starter-web'
+
+    // RabbitMQ
+    implementation group: 'org.springframework.cloud', name: 'spring-cloud-starter-stream-rabbit'
+
+    // Swagger/OpenAPI
+    implementation group: 'org.springdoc', name: 'springdoc-openapi-ui', version: "${springDocVersion}"
+
+    testImplementation group: 'org.assertj', name: 'assertj-core'
+    testImplementation group: 'org.springframework.boot', name: 'spring-boot-starter-test'
+
+    // TestContainers with JUnit 5.
+    testImplementation group: 'org.testcontainers', name: 'rabbitmq', version:  "${testContainersVersion}"
+    testImplementation group: 'org.testcontainers', name: 'junit-jupiter', version:  "${testContainersVersion}"
+}
+
+test {
+    useJUnitPlatform()
+}
