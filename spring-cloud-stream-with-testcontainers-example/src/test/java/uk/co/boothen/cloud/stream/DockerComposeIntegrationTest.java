@@ -27,10 +27,9 @@ import static org.assertj.core.api.Assertions.assertThat;
 @SpringBootTest(classes = {Application.class, QueueConfiguration.class, TestConfiguration.class},
     webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @Testcontainers
-class PostMessageControllerIntegrationTest {
+class DockerComposeIntegrationTest {
 
     @Container
-//    static RabbitMQContainer rabbitMQContainer = new RabbitMQContainer(DockerImageName.parse("rabbitmq:3.7.25-management-alpine"));
     static DockerComposeContainer<?> environment = new DockerComposeContainer<>(new File("src/test/resources/docker-compose.yaml"))
         .withExposedService("db_1", 5432)
         .withExposedService("rabbitmq_1", 5672);
