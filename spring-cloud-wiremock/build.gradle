@@ -1,0 +1,104 @@
+plugins {
+    id 'java'
+    id 'org.springframework.boot' version '2.3.8.RELEASE'
+    id 'io.spring.dependency-management' version '1.0.11.RELEASE'
+    // https://github.com/OpenAPITools/openapi-generator/tree/master/modules/openapi-generator-gradle-plugin
+    // https://github.com/OpenAPITools/openapi-generator/issues/8360 - cannot update to latest version
+    id 'org.openapi.generator' version '4.3.0'
+}
+
+group 'uk.co.boothen'
+version '1.0-SNAPSHOT'
+
+repositories {
+    mavenLocal()
+    mavenCentral()
+}
+
+dependencyManagement {
+    imports {
+        mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
+    }
+}
+
+dependencies {
+    implementation group: 'org.springframework.boot', name: 'spring-boot-starter-aop'
+    implementation group: 'org.springframework.boot', name: 'spring-boot-starter-actuator'
+    implementation group: 'org.springframework.boot', name: 'spring-boot-starter-web'
+
+    // Feign client
+    implementation group: 'org.springframework.cloud', name: 'spring-cloud-starter-openfeign'
+
+    // Swagger/OpenAPI
+    // http://localhost:8080/swagger-ui.html
+    // http://localhost:8080/v3/api-docs
+    implementation group: 'org.springdoc', name: 'springdoc-openapi-ui', version: "${springDocVersion}"
+
+    // Swagger
+    // implementation group: 'io.springfox', name: 'springfox-boot-starter', version: "${springFoxBootStartVersion}"
+
+    // Older version of Swagger required for org.openapi.generator
+    implementation group: 'io.swagger', name: 'swagger-annotations', version: "${swaggerAnnotationsVersion}"
+
+    // Required for org.openapi.generator - 4.3.0
+    implementation group: 'org.openapitools', name: 'jackson-databind-nullable', version: "${jacksonDatabindNullableVersion}"
+    implementation group: 'javax.validation', name: 'validation-api', version: "${javaxValidationVersion}"
+
+    testImplementation group: 'org.assertj', name: 'assertj-core'
+    testImplementation group: 'org.springframework.boot', name: 'spring-boot-starter-test'
+
+    // Spring Cloud Wiremock
+    testImplementation group: 'org.springframework.cloud', name: 'spring-cloud-contract-wiremock'
+}
+
+test {
+    useJUnitPlatform()
+}
+
+task buildServerSide(type: org.openapitools.generator.gradle.plugin.tasks.GenerateTask) {
+    // https://github.com/OpenAPITools/openapi-generator/blob/master/docs/generators/spring.md
+    generatorName = "spring"
+    library= "spring-boot"
+    inputSpec = "$rootDir/src/main/resources/books.yaml"
+    outputDir = "$buildDir/generated"
+    apiPackage = "uk.co.boothen.cloud.wiremock.server.api"
+    modelPackage = "uk.co.boothen.cloud.wiremock.server.model"
+    generateApiTests = false
+    configOptions = [
+            dateLibrary: "java8",
+            interfaceOnly: "true",
+            unhandledException: "true",
+            sourceFolder: "sources/openapi",
+            booleanGetterPrefix: "is",
+            openApiNullable: "false"
+    ]
+//    globalProperties = [
+//            modelDocs: "false"
+//    ]
+}
+
+task buildClientSide(type: org.openapitools.generator.gradle.plugin.tasks.GenerateTask) {
+    // https://github.com/OpenAPITools/openapi-generator/blob/master/docs/generators/spring.md
+    generatorName = "spring"
+    library= "spring-boot"
+    inputSpec = "$rootDir/src/main/resources/books.yaml"
+    outputDir = "$buildDir/generated"
+    apiPackage = "uk.co.boothen.cloud.wiremock.client.api"
+    modelPackage = "uk.co.boothen.cloud.wiremock.client.model"
+    generateApiTests = false
+    configOptions = [
+            dateLibrary: "java8",
+            interfaceOnly: "true",
+            unhandledException: "true",
+            sourceFolder: "sources/openapi",
+            booleanGetterPrefix: "is",
+            openApiNullable: "false"
+    ]
+//    globalProperties = [
+//            modelDocs: "false"
+//    ]
+}
+
+compileJava.dependsOn tasks.buildServerSide, tasks.buildClientSide
+
+sourceSets.main.java.srcDirs += ["$buildDir/generated/sources/openapi"]

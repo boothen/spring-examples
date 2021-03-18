@@ -1,0 +1,7 @@
+spring:
+  application:
+    name: spring-cloud-wiremock
+
+feign:
+  url: http://localhost:8080
+  name: remote
