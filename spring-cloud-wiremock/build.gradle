@@ -4,7 +4,7 @@ plugins {
     id 'io.spring.dependency-management' version '1.0.11.RELEASE'
     // https://github.com/OpenAPITools/openapi-generator/tree/master/modules/openapi-generator-gradle-plugin
     // https://github.com/OpenAPITools/openapi-generator/issues/8360 - cannot update to latest version
-    id 'org.openapi.generator' version '4.3.0'
+    id 'org.openapi.generator' version '5.1.0'
 }
 
 group 'uk.co.boothen'
@@ -40,9 +40,8 @@ dependencies {
     // Older version of Swagger required for org.openapi.generator
     implementation group: 'io.swagger', name: 'swagger-annotations', version: "${swaggerAnnotationsVersion}"
 
-    // Required for org.openapi.generator - 4.3.0
-    implementation group: 'org.openapitools', name: 'jackson-databind-nullable', version: "${jacksonDatabindNullableVersion}"
-    implementation group: 'javax.validation', name: 'validation-api', version: "${javaxValidationVersion}"
+    // Required for org.openapi.generator - 5.1.0
+    implementation 'io.springfox:springfox-swagger2:3.0.0'
 
     testImplementation group: 'org.assertj', name: 'assertj-core'
     testImplementation group: 'org.springframework.boot', name: 'spring-boot-starter-test'
@@ -70,33 +69,41 @@ task buildServerSide(type: org.openapitools.generator.gradle.plugin.tasks.Genera
             unhandledException: "true",
             sourceFolder: "sources/openapi",
             booleanGetterPrefix: "is",
-            openApiNullable: "false"
+            openApiNullable: "false",
+            skipDefaultInterface: "true"
     ]
-//    globalProperties = [
-//            modelDocs: "false"
-//    ]
+    globalProperties = [
+            modelDocs: "false"
+    ]
 }
 
 task buildClientSide(type: org.openapitools.generator.gradle.plugin.tasks.GenerateTask) {
     // https://github.com/OpenAPITools/openapi-generator/blob/master/docs/generators/spring.md
     generatorName = "spring"
-    library= "spring-boot"
+    library= "spring-cloud"
     inputSpec = "$rootDir/src/main/resources/books.yaml"
     outputDir = "$buildDir/generated"
     apiPackage = "uk.co.boothen.cloud.wiremock.client.api"
     modelPackage = "uk.co.boothen.cloud.wiremock.client.model"
     generateApiTests = false
+    generateModelTests = false
     configOptions = [
             dateLibrary: "java8",
             interfaceOnly: "true",
             unhandledException: "true",
             sourceFolder: "sources/openapi",
             booleanGetterPrefix: "is",
-            openApiNullable: "false"
+            openApiNullable: "false",
+            skipDefaultInterface: "true",
+            "serializationLibrary"     : "jackson",
+            "useBeanValidation"        : "false"
     ]
-//    globalProperties = [
-//            modelDocs: "false"
-//    ]
+    globalProperties = [
+            modelDocs: "false",
+            apiDocs: "false",
+            apis: "",
+            models: ""
+    ]
 }
 
 compileJava.dependsOn tasks.buildServerSide, tasks.buildClientSide

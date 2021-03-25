@@ -1,0 +1,3 @@
+feign:
+  url: http://localhost:${wiremock.server.port}
+  name: remote
