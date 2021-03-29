@@ -1,0 +1,4 @@
+dependencies {
+
+    testImplementation project(':changeme-test:changeme-test-shared')
+}

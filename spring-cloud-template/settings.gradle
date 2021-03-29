@@ -1,2 +1,36 @@
+pluginManagement {
+    repositories {
+        mavenLocal()
+        gradlePluginPortal()
+        mavenCentral()
+        jcenter()
+    }
+
+    plugins {
+        id 'com.github.ben-manes.versions' version "${versionsPluginVersion}"
+        id 'com.github.spotbugs' version "${spotbugsPluginVersion}"
+        id 'io.spring.dependency-management' version "${springDependencyManagementPluginVersion}"
+        id 'org.sonarqube' version "${sonarqubePluginVersion}"
+        id 'org.springframework.boot' version "${springBootPluginVersion}"
+    }
+}
+
+buildCache {
+    local {
+        enabled = true
+    }
+}
+
 rootProject.name = '#CHANGEME#'
+
+include 'changeme-main:changeme-app',
+        'changeme-main:changeme-core:changeme-core-impl',
+        'changeme-main:changeme-core:changeme-core-port',
+        'changeme-main:changeme-inbound:changeme-inbound-http',
+        'changeme-main:changeme-inbound:changeme-inbound-message',
+        'changeme-main:changeme-outbound:changeme-outbound-datastore',
+        'changeme-main:changeme-outbound:changeme-outbound-message',
+        'changeme-test:changeme-test-acceptance',
+        'changeme-test:changeme-test-shared',
+        'changeme-test:changeme-test-smoke'
 

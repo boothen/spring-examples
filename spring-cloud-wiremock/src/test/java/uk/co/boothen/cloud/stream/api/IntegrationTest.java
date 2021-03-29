@@ -1,6 +1,8 @@
 package uk.co.boothen.cloud.stream.api;
 
 import com.github.tomakehurst.wiremock.client.ResponseDefinitionBuilder;
+import com.github.tomakehurst.wiremock.client.WireMock;
+import com.github.tomakehurst.wiremock.verification.LoggedRequest;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +24,7 @@ import java.util.Collections;
 import java.util.List;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.get;
+import static com.github.tomakehurst.wiremock.client.WireMock.getRequestedFor;
 import static com.github.tomakehurst.wiremock.client.WireMock.stubFor;
 import static com.github.tomakehurst.wiremock.client.WireMock.urlPathEqualTo;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -50,5 +53,9 @@ class IntegrationTest {
         });
 
         assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
+
+        List<LoggedRequest> loggedRequests = WireMock.findAll(getRequestedFor(urlPathEqualTo("/book")));
+
+        assertThat(loggedRequests).hasSize(1);
     }
 }

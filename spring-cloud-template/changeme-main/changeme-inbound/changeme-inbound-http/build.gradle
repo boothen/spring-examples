@@ -1,0 +1,8 @@
+dependencies {
+    implementation project(':changeme-main:changeme-core:changeme-core-port')
+
+    implementation group: 'org.springframework.boot', name: 'spring-boot-starter-web'
+
+    // Swagger/OpenAPI
+    implementation group: 'org.springdoc', name: 'springdoc-openapi-ui', version: "${springDocVersion}"
+}

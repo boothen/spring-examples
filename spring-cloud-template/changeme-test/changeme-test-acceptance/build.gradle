@@ -1,0 +1,10 @@
+dependencies {
+    testImplementation project(':changeme-main:changeme-app')
+    testImplementation project(':changeme-test:changeme-test-shared')
+
+    testImplementation group: 'org.springframework.boot', name: 'spring-boot-starter-test'
+
+    // TestContainers with JUnit 5.
+    testImplementation group: 'org.testcontainers', name: 'rabbitmq', version:  "${testContainersVersion}"
+    testImplementation group: 'org.testcontainers', name: 'junit-jupiter', version:  "${testContainersVersion}"
+}

@@ -1,0 +1,29 @@
+plugins {
+    id 'org.springframework.boot'
+}
+
+dependencies {
+    implementation project(':changeme-main:changeme-core:changeme-core-impl')
+    implementation project(':changeme-main:changeme-inbound:changeme-inbound-http')
+    implementation project(':changeme-main:changeme-inbound:changeme-inbound-message')
+    implementation project(':changeme-main:changeme-outbound:changeme-outbound-datastore')
+    implementation project(':changeme-main:changeme-outbound:changeme-outbound-message')
+
+    implementation group: 'org.springframework.boot', name: 'spring-boot-starter-aop'
+    implementation group: 'org.springframework.boot', name: 'spring-boot-starter-actuator'
+    implementation group: 'org.springframework.boot', name: 'spring-boot-starter-web'
+
+    // Swagger/OpenAPI
+    implementation group: 'org.springdoc', name: 'springdoc-openapi-ui', version: "${springDocVersion}"
+}
+
+jar {
+    enabled = true
+}
+
+bootJar {
+    archiveName = "${project.name}-exec.jar"
+}
+springBoot {
+    buildInfo()
+}

@@ -1,0 +1,7 @@
+dependencies {
+
+    implementation project(':changeme-main:changeme-core:changeme-core-port')
+
+    // RabbitMQ
+    implementation group: 'org.springframework.cloud', name: 'spring-cloud-starter-stream-rabbit'
+}

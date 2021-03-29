@@ -1,0 +1,3 @@
+dependencies {
+    implementation project(':changeme-main:changeme-core:changeme-core-port')
+}
