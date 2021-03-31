@@ -7,8 +7,10 @@ else
   exit 1
 fi
 
-find . -depth -name "*changeme*" -type d -execdir sh -c 'mv {} $(echo {} | sed "s/changeme/$1/")' \;
+projectname=$1
+export projectname
+find . -depth -name "*changeme*" -type d -execdir sh -c 'mv {} $(echo {} | sed "s/changeme/$projectname/")' \;
 
-find . -iname "*.gradle" -or -iname "*.java" | xargs sed -i '' "s/changeme/$1/g"
+find . -iname "*.gradle" -or -iname "*.java" -or iname "application.yaml" | xargs sed -i '' "s/changeme/$1/g"
 
 echo "Finished"
