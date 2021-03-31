@@ -21,7 +21,7 @@ buildCache {
     }
 }
 
-rootProject.name = '#CHANGEME#'
+rootProject.name = 'changeme'
 
 include 'changeme-main:changeme-app',
         'changeme-main:changeme-core:changeme-core-impl',
