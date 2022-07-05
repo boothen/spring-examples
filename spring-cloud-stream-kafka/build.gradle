@@ -1,11 +1,17 @@
 plugins {
     id 'java'
-    id 'org.springframework.boot' version '2.7.0'
-    id 'io.spring.dependency-management' version '1.0.11.RELEASE'
+    id 'org.springframework.boot'
+    id 'io.spring.dependency-management'
 }
 
 group 'uk.co.boothen'
 version '1.0-SNAPSHOT'
+
+tasks.withType(JavaCompile) {
+    sourceCompatibility = 17
+    targetCompatibility = 17
+    options.encoding = 'UTF-8'
+}
 
 repositories {
     mavenLocal()
@@ -23,8 +29,9 @@ dependencies {
     implementation group: 'org.springframework.boot', name: 'spring-boot-starter-actuator'
     implementation group: 'org.springframework.boot', name: 'spring-boot-starter-web'
 
-    // RabbitMQ
-    implementation group: 'org.springframework.cloud', name: 'spring-cloud-starter-stream-rabbit'
+    // Kafka
+    implementation group: 'org.springframework.cloud', name: 'spring-cloud-starter-stream-kafka'
+//    implementation group: 'org.springframework.cloud', name: 'spring-cloud-stream-binder-kafka-streams'
 
     // Swagger/OpenAPI
     implementation group: 'org.springdoc', name: 'springdoc-openapi-ui', version: "${springDocVersion}"
@@ -33,7 +40,7 @@ dependencies {
     testImplementation group: 'org.springframework.boot', name: 'spring-boot-starter-test'
 
     // TestContainers with JUnit 5.
-    testImplementation group: 'org.testcontainers', name: 'rabbitmq', version:  "${testContainersVersion}"
+    testImplementation group: 'org.testcontainers', name: 'kafka', version:  "${testContainersVersion}"
     testImplementation group: 'org.testcontainers', name: 'junit-jupiter', version:  "${testContainersVersion}"
 }
 

@@ -10,15 +10,14 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
-import org.testcontainers.containers.GenericContainer;
-import org.testcontainers.containers.wait.strategy.Wait;
+import org.testcontainers.containers.RabbitMQContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 import org.testcontainers.utility.DockerImageName;
 
-import java.time.Duration;
 import java.util.Collections;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.TimeUnit;
@@ -28,13 +27,11 @@ import static org.assertj.core.api.Assertions.assertThat;
 @SpringBootTest(classes = {Application.class, QueueConfiguration.class, TestConfiguration.class},
     webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @Testcontainers
-class GenericDockerContainerIntegrationTest {
+@ActiveProfiles("test")
+class PostMessageControllerIntegrationTest {
 
     @Container
-    static GenericContainer<?> rabbitMqContainer = new GenericContainer<>(DockerImageName.parse("rabbitmq:3.7.25-management-alpine"))
-        .withExposedPorts(5672)
-        .waitingFor(Wait.forLogMessage(".*Server startup complete.*", 1)
-                        .withStartupTimeout(Duration.ofSeconds(60)));
+    static RabbitMQContainer rabbitMQContainer = new RabbitMQContainer(DockerImageName.parse("rabbitmq:3.7.25-management-alpine"));
 
 
     @Autowired
@@ -45,8 +42,8 @@ class GenericDockerContainerIntegrationTest {
 
     @DynamicPropertySource
     static void registerProperties(DynamicPropertyRegistry registry) {
-        registry.add("spring.rabbitmq.host", () -> rabbitMqContainer.getHost());
-        registry.add("spring.rabbitmq.port", () -> rabbitMqContainer.getMappedPort(5672));
+        registry.add("spring.rabbitmq.host", rabbitMQContainer::getHost);
+        registry.add("spring.rabbitmq.port", () -> rabbitMQContainer.getMappedPort(5672));
     }
 
     @Test
@@ -59,9 +56,8 @@ class GenericDockerContainerIntegrationTest {
 
         assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
 
-        Payload payload = integerList.poll(10, TimeUnit.SECONDS);
+        Payload payload = integerList.poll(30, TimeUnit.SECONDS);
 
         assertThat(payload).isEqualTo(new Payload(10));
-
     }
 }

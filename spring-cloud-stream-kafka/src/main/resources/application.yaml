@@ -1,0 +1,11 @@
+spring:
+  application:
+    name: spring-cloud-stream-kafka
+  cloud:
+    stream:
+      kafka:
+        binder:
+          brokers: localhost:9092
+      bindings:
+        producer-out-0:
+          destination: first-topic

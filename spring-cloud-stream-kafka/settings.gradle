@@ -1,0 +1,15 @@
+pluginManagement {
+    repositories {
+        mavenLocal()
+        gradlePluginPortal()
+        mavenCentral()
+    }
+
+    plugins {
+        id 'io.spring.dependency-management' version "${springDependencyManagementPluginVersion}"
+        id 'org.springframework.boot' version "${springBootPluginVersion}"
+    }
+}
+
+rootProject.name = 'spring-cloud-stream-kafka'
+

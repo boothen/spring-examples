@@ -4,7 +4,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
-import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -46,9 +45,6 @@ class PostMessageControllerIntegrationTest {
     }
 
     @Autowired
-    private ReceivingSource receivingSource;
-
-    @Autowired
     private QueueMessageHandler queueMessageHandler;
 
     @Test
@@ -59,19 +55,9 @@ class PostMessageControllerIntegrationTest {
         HttpEntity<Void> httpEntity = new HttpEntity<>(headers);
         ResponseEntity<Void> responseEntity = testRestTemplate.exchange("/post-message", HttpMethod.POST, httpEntity, Void.class);
 
-        testRestTemplate.exchange("/post-message", HttpMethod.POST, httpEntity, Void.class);
-
-        testRestTemplate.exchange("/post-message", HttpMethod.POST, httpEntity, Void.class);
-
         assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
 
         Payload payload = integerList.poll(10, TimeUnit.SECONDS);
-
-        assertThat(payload).isNull();
-
-        receivingSource.pollableMessageSource().poll(queueMessageHandler, new ParameterizedTypeReference<Payload>() {});
-
-        payload = integerList.poll(10, TimeUnit.SECONDS);
 
         assertThat(payload).isEqualTo(new Payload(10));
     }

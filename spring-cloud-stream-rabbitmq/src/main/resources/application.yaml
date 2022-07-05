@@ -1,0 +1,8 @@
+spring:
+  application:
+    name: spring-cloud-stream-rabbitmq
+  cloud:
+    stream:
+      bindings:
+        producer-out-0:
+          destination: first-topic
